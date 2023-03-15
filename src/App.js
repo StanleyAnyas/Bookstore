@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useState, useEffect } from 'react';
 import { DataGrid, } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
@@ -17,7 +17,7 @@ import AddBook from './AddBook';
 function App() {
   const [bookList, setBookList] = useState([]);
 
-  const fetchBooks = () => {
+  const fetchBooks = useCallback(() => {
     try{
       fetch('https://bookstore-3658b-default-rtdb.europe-west1.firebasedatabase.app/books/.json')
       .then(response => response.json())
@@ -27,11 +27,12 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, []);
+
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [fetchBooks]);
 
   const newBook = (book) => {
     fetch('https://bookstore-3658b-default-rtdb.europe-west1.firebasedatabase.app/books/.json',
@@ -65,6 +66,16 @@ function App() {
     {field: 'Year', headerName: 'Year', width: 200, editable: true},
     {field: 'ISBN', headerName: 'ISBN', width: 200, editable: true},
     {field: 'Price', headerName: 'Price', width: 200, editable: true},
+    {field: "Delete", headerName: "", width: 100, 
+    filterable: false, sortable: false, disableColumnMenu: true,
+    cellRendererFramework: (params) => {
+      return (
+        <IconButton aria-label="delete" color='error' onClick={() => deleteBookFromDB(params.data.id)}>
+          <DeleteIcon />
+        </IconButton>
+      )
+    }
+    }
   ];
 
   return (
@@ -83,9 +94,6 @@ function App() {
           <Box sx={{ width: '100%' }}>
             <DataGrid rows={bookList} columns={columns} pageSize={5} checkboxSelection />
           </Box>
-          <IconButton aria-label="delete" color='error' onClick={() => deleteBookFromDB(bookList.id)}>
-            <DeleteIcon />
-          </IconButton>
         </AgGridReact>
       </div>
     </div>
