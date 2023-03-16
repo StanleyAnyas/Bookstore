@@ -89,7 +89,7 @@ function App() {
       </AppBar>
       <br/>
       <AddBook newBook={newBook} />
-      <div className="ag-theme-alpine" style={{height: 400, width: 600, margin: "auto"}}>
+      <div className="ag-theme-alpine" style={{height: 500, width: 1100, margin: "auto"}}>
         <AgGridReact rowData={bookList} columnDefs={columns} pagination={true} paginationPageSize={5}>
           <Box sx={{ width: '100%' }}>
             <DataGrid rows={bookList} columns={columns} pageSize={5} checkboxSelection />
